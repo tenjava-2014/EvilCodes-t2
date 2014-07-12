@@ -80,6 +80,7 @@ public class DatabaseHandler {
         connection.execute(query);
     }
 
+    /*
     public static float getEnergy(final Player player) {
         final String query = "SELECT * FROM `" + prefix + "player" + "` WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
         final ResultSet resultSet = connection.select(query);
@@ -98,6 +99,7 @@ public class DatabaseHandler {
         }
         return value;
     }
+    */
 
     public static DBCore getConnection() {
         return DatabaseHandler.connection;

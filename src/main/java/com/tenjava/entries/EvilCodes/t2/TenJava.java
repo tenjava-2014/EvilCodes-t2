@@ -21,6 +21,7 @@ public class TenJava extends JavaPlugin {
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "gamerule doDaylighCycle false");
         Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "time set 15000");
         Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+        Timer.start();
     }
 
     public void onDisable() {

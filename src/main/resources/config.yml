@@ -10,3 +10,4 @@ database:
   username: "root"
   password: ""
   prefix: "me_"
+pvp: false
