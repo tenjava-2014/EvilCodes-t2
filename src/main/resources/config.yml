@@ -1,0 +1,6 @@
+prefix: "&6[&3MineEscape&6]"
+spawn:
+  world: "world"
+  x: 150
+  y: 70
+  z: 0
