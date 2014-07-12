@@ -14,14 +14,17 @@ public class DatabaseHandler {
     private static String prefix;
 
     /*
-    me_player: id, name, uuid, kills, deaths, firstlogin, lastlogin, mobkills
+    Table structure for ..._player: id, name, uuid, kills, deaths, firstlogin, lastlogin, mobkills
      */
 
+    //Setup a databaseconnection with credentials from the config.yml
     public static void setup() {
+        //Get all values
         DatabaseHandler.connection = new MySQLCore(FilesHandler.getConfig().getString("database.host"), FilesHandler.getConfig().getString("database.database"),
                 FilesHandler.getConfig().getString("database.username"), FilesHandler.getConfig().getString("database.password"));
         DatabaseHandler.prefix = FilesHandler.getConfig().getString("database.prefix");
         if (connection.checkConnection()) {
+            //Create table if not exists
             if (!connection.existsTable(prefix + "player")) {
                 LogHandler.log("Connected to database!");
                 LogHandler.log("Creating database table " + prefix + "player!");
@@ -38,15 +41,25 @@ public class DatabaseHandler {
                         ") ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
             }
         } else {
+            //Connection failed
             LogHandler.err("Could not connect to database!");
         }
     }
 
+    /**
+     * Is this user recognized in the database?
+     * @param player The player
+     * @return boolean if player is in database
+     */
     public static boolean userExists(final Player player) {
         final String ifquery = "SELECT * FROM `" + prefix + "player" + "` WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
         return MySQLCore.mysqlExists(ifquery);
     }
 
+    /**
+     * Insert the player into the databse with default values
+     * @param player The player
+     */
     public static void insert(final Player player) {
         final Date today = new Date();
         final String query = "INSERT INTO `" + prefix + "player` (`id`, `name`, `uuid`, `kills`, `deaths`, `firstlogin`, `lastlogin`, `mobkills`) VALUES (NULL, '" + player.getName() + "', '" + player.getUniqueId().toString()
@@ -54,6 +67,12 @@ public class DatabaseHandler {
         connection.execute(query);
     }
 
+    /**
+     * Get a value from a row (like kills, deaths, mobkills) ONLY INTEGER!
+     * @param row Name of the value you want to get
+     * @param player The player
+     * @return int for the value
+     */
     public static int getValue(final String row, final Player player) {
         final String query = "SELECT * FROM `" + prefix + "player" + "` WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
         final ResultSet resultSet = connection.select(query);
@@ -73,6 +92,11 @@ public class DatabaseHandler {
         return value;
     }
 
+    /**
+     * Increase the value for the player with 1 (+1)
+     * @param row Name of the value you want to increase
+     * @param player The player
+     */
     public static void increaseValue(final String row, final Player player) {
         final int newvalue = getValue(row, player) + 1;
         final String query = "UPDATE `" + prefix + "player` SET `" + row + "` = '" + newvalue + "' WHERE `uuid` = '" + player.getUniqueId().toString() + "';";

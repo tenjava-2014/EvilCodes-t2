@@ -3,6 +3,9 @@ package com.tenjava.entries.EvilCodes.t2.utils;
 import java.sql.Connection;
 import java.sql.ResultSet;
 
+/**
+ * Database interface for easier use ;)
+ */
 public abstract interface DBCore {
     public abstract Connection getConnection();
 

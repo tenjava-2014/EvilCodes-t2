@@ -1,1 +1,4 @@
-welcome: "&3Try to survive, find chests and food to keep your energy on a high level!"
+welcome: "&3Try to survive, find chests and kill mobs to keep your energy on a high level!"
+death: "&3Oh no, you died. Try to survive longer next time!"
+nolvl30: "&3You need &630 levels &3to enchant your items"
+nopvp: "&3PvP is disabled!"

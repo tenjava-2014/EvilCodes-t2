@@ -8,14 +8,22 @@ import org.bukkit.potion.PotionEffectType;
 
 public class Timer {
 
-    private static int task = 0;
+    public static int task = 0;
 
+    /**
+     * Start the timer
+     */
     public static void start() {
         task = Bukkit.getScheduler().scheduleSyncRepeatingTask(TenJava.instance, new Runnable() {
             @Override
             public void run() {
                 for (final Player player : Bukkit.getOnlinePlayers()) {
+                    if (player.getExp() > 0.01f) {
+                        //Reduce players energy every sec
+                        player.setExp(player.getExp() - 0.01f);
+                    }
                     final float exp = player.getExp();
+                    //Add good or bad effects
                     if (exp < 0.1f) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2));
                         player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 1));

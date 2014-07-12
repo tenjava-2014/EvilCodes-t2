@@ -9,6 +9,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 
+/**
+ * Main DB Class
+ */
 public class MySQLCore implements DBCore
 {
 

@@ -9,9 +9,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class TenJava extends JavaPlugin {
 
+    //Plugin instance for Scheduler, DataFolder ...
     public static TenJava instance;
+    //Plugin prefix in console
     public static String prefix = "[MineEscape] ";
-    public static final boolean debug = true;
+    //Receive debug messages (only for devs)
+    public static final boolean debug = false;
 
     public void onEnable() {
         instance = this;
@@ -26,5 +29,6 @@ public class TenJava extends JavaPlugin {
 
     public void onDisable() {
         DatabaseHandler.getConnection().close();
+        Bukkit.getScheduler().cancelTask(Timer.task);
     }
 }

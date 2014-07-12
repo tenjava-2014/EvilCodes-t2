@@ -11,3 +11,5 @@ database:
   password: ""
   prefix: "me_"
 pvp: false
+startitems:
+  - 267

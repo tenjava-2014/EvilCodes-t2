@@ -21,6 +21,11 @@ Features
 - More energy = more damage & faster
 - Find chests to get better items so that you can kill mobs faster
 - Depends on a mysql database
+- Configurable messages, starteritems, spawnpoint and plugin prefix
+- Always night
+- Only monsters (should) spawn
+- No hunger
+- No building / destroying blocks (only OPS)
 
 Maven will download all required dependencies and build a ready-for-use plugin package!
 
