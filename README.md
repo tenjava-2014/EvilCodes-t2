@@ -27,25 +27,20 @@ Features
 - No hunger
 - No building / destroying blocks (only OPS)
 
-Maven will download all required dependencies and build a ready-for-use plugin package!
-
----------------------------------------
-
-Compilation
------------
-
-- Download & Install [Maven 3](http://maven.apache.org/download.html)
-- Clone the repository: `git clone https://github.com/tenjava/EvilCodes-t2`
-- Compile and create the plugin package using Maven: `mvn`
-
-Maven will download all required dependencies and build a ready-for-use plugin package!
-
 ---------------------------------------
 
 Usage
 -----
 
-1. Install plugin
+For admins:
 
-<!-- Hi, EvilCodes! This is the default README for every ten.java submission. -->
-<!-- We encourage you to edit this README with some information about your submission – keep in mind you'll be scored on documentation! -->
+1. Install plugin
+2. Edit config.yml
+3. Setup some chests, enchantment tables and a nice map
+4. Let the players play
+
+For players:
+
+1. Join the server
+2. Escape the mobs and kill them
+
