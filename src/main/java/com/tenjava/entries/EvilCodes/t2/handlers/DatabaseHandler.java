@@ -51,7 +51,8 @@ public class DatabaseHandler {
     public static void insert(final Player player) {
         final Date today = new Date();
         final String query = "INSERT INTO `" + prefix + "player` (`id`, `name`, `uuid`, `kills`, `deaths`, `energy`, `firstlogin`, `lastlogin`, `mobkills`) VALUES (NULL, '" + player.getName() + "', '" + player.getUniqueId().toString()
-                + "', '0', '0', '1.0', NULL, NULL, '0');";
+                + "', '0', '0', '1.0', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0');";
+        connection.execute(query);
     }
 
     public static int getValue(final String row, final Player player) {

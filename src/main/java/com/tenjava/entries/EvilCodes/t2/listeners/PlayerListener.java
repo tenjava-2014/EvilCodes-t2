@@ -12,10 +12,7 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerLevelChangeEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 
 public class PlayerListener implements Listener {
 
@@ -53,6 +50,12 @@ public class PlayerListener implements Listener {
     }
 
     @EventHandler
+    public void onExpChange(final PlayerExpChangeEvent e) {
+        e.setAmount(0);
+        e.getPlayer().setExp(DatabaseHandler.getEnergy(e.getPlayer()));
+    }
+
+    @EventHandler
     public void onPlayerDeath(final PlayerDeathEvent e) {
         final Player player = e.getEntity();
         DatabaseHandler.increaseValue("deaths", player);
@@ -65,7 +68,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerLevelUp(final PlayerLevelChangeEvent e) {
-        e.getPlayer().setLevel(0);
+        e.getPlayer().setLevel(DatabaseHandler.getValue("mobkills", e.getPlayer()));
     }
 
     @EventHandler
