@@ -73,6 +73,12 @@ public class DatabaseHandler {
         return value;
     }
 
+    public static void increaseValue(final String row, final Player player) {
+        final int newvalue = getValue(row, player) + 1;
+        final String query = "UPDATE `" + prefix + "player` SET `" + row + "` = '" + newvalue + "' WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
+        connection.execute(query);
+    }
+
     public static float getEnergy(final Player player) {
         final String query = "SELECT * FROM `" + prefix + "player" + "` WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
         final ResultSet resultSet = connection.select(query);
