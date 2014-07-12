@@ -23,6 +23,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onPlayerQuit(final PlayerQuitEvent e) {
         final Player player = e.getPlayer();
-        DatabaseHandler.getConnection().execute("UPDATE `" + DatabaseHandler.getPrefix() + "players` SET `energy` = '" + player.getExp() + "' WHERE `uuid` = '" + player.getUniqueId().toString() + "';");
+        DatabaseHandler.getConnection().execute("UPDATE `" + DatabaseHandler.getPrefix() + "player` SET `energy` = '" + player.getExp() + "' WHERE `uuid` = '" + player.getUniqueId().toString() + "';");
     }
 }
