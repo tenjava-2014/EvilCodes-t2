@@ -25,11 +25,6 @@ Maven will download all required dependencies and build a ready-for-use plugin p
 
 ---------------------------------------
 
-TODO
-----
-In todo.txt in the main directory
----------------------------------------
-
 Usage
 -----
 

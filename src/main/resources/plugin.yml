@@ -1,3 +1,4 @@
 name: EvilCodes-t2
 main: com.tenjava.entries.EvilCodes.t2.TenJava
 version: '${project.version}'
+author: EvilCodes
