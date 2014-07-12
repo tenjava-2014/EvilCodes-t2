@@ -4,3 +4,9 @@ spawn:
   x: 150
   y: 70
   z: 0
+database:
+  host: "localhost"
+  database: "devtests"
+  username: "root"
+  password: ""
+  prefix: "me_"
