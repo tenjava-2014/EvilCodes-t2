@@ -17,12 +17,12 @@ public class Timer {
                 for (final Player player : Bukkit.getOnlinePlayers()) {
                     final float exp = player.getExp();
                     if (exp < 0.1f) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 2));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 20, 1));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 2));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 40, 1));
                         if (!PlayerListener.minusStr2.contains(player))
                             PlayerListener.minusStr2.add(player);
                     } else if (exp > 0.1f && exp < 0.3f) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 20, 1));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 40, 1));
                         if (!PlayerListener.minusStr1.contains(player))
                             PlayerListener.minusStr1.add(player);
                         if (PlayerListener.minusStr2.contains(player))
@@ -33,15 +33,15 @@ public class Timer {
                         if (PlayerListener.minusStr2.contains(player))
                             PlayerListener.minusStr2.remove(player);
                     } else if (exp > 0.5f && exp < 0.8f) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 1));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20, 1));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 1));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40, 1));
                         if (!PlayerListener.minusStr1.contains(player))
                             PlayerListener.minusStr1.remove(player);
                         if (PlayerListener.minusStr2.contains(player))
                             PlayerListener.minusStr2.remove(player);
                     } else if (exp > 0.8f && exp < 0.99f) {
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 20, 2));
-                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 20, 1));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 2));
+                        player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40, 1));
                         if (PlayerListener.minusStr1.contains(player))
                             PlayerListener.minusStr1.remove(player);
                         if (PlayerListener.minusStr2.contains(player))

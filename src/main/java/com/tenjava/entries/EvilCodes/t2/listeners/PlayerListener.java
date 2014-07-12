@@ -2,7 +2,9 @@ package com.tenjava.entries.EvilCodes.t2.listeners;
 
 import com.tenjava.entries.EvilCodes.t2.handlers.DatabaseHandler;
 import com.tenjava.entries.EvilCodes.t2.handlers.FilesHandler;
+import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -11,13 +13,30 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class PlayerListener implements Listener {
 
     public static final ArrayList<Player> minusStr2 = new ArrayList<Player>();
     public static final ArrayList<Player> minusStr1 = new ArrayList<Player>();
+
+    private static final Material[] findableItems = { Material.WOOD_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLD_SWORD, //SWORDS
+            Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS,  //LEATHER
+            Material.IRON_HELMET, Material.IRON_CHESTPLATE, Material.IRON_LEGGINGS, Material.IRON_BOOTS, //IRON
+            Material.CHAINMAIL_HELMET, Material.CHAINMAIL_CHESTPLATE, Material.CHAINMAIL_LEGGINGS, Material.CHAINMAIL_BOOTS, //CHAIN
+            Material.GOLD_HELMET, Material.GOLD_CHESTPLATE, Material.GOLD_LEGGINGS, Material.GOLD_BOOTS, //GOLD
+            Material.APPLE, Material.PUMPKIN_PIE, Material.PUMPKIN, Material.MELON, Material.MELON_BLOCK, Material.BREAD, Material.MUSHROOM_SOUP, //FOOD
+            Material.RED_MUSHROOM, Material.BROWN_MUSHROOM, Material.POTATO, Material.BAKED_POTATO, Material.COOKED_BEEF, Material.COOKED_CHICKEN,  //FOOD
+            Material.COOKED_FISH, Material.COOKIE, Material.CAKE, Material.CARROT_ITEM, Material.GOLDEN_APPLE, //FOOD
+            Material.WOOD_AXE, Material.STONE_AXE, Material.IRON_AXE, //AXES
+            Material.FISHING_ROD, Material.EXP_BOTTLE, Material.BOW, Material.ARROW }; //MISC
+
+
 
     @EventHandler
     public void onPlayerJoin(final PlayerJoinEvent e) {
@@ -27,7 +46,6 @@ public class PlayerListener implements Listener {
             player.setExp(0.99f);
         }
         player.setGameMode(GameMode.SURVIVAL);
-        //TODO Update lastlogin
     }
 
     @EventHandler
@@ -67,7 +85,26 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent e) {
-        //TODO Chests
+        if (e.getClickedBlock() != null) {
+            if (e.getClickedBlock().getType().equals(Material.CHEST)) {
+                e.setCancelled(true);
+                //Generate new chest
+                final Inventory inv = Bukkit.createInventory(null, 3 * 9, "RewardChest");
+                final List<ItemStack> inchestitems = new ArrayList<ItemStack>();
+                final Random r = new Random();
+                final int num = r.nextInt(10);
+                for (int i = 0; i < num; i++) {
+                    final Material itemmat = findableItems[r.nextInt(findableItems.length)];
+                    final ItemStack item = new ItemStack(itemmat, 1);
+                    inchestitems.add(item);
+                }
+                for (final ItemStack item : inchestitems) {
+                    inv.setItem(r.nextInt(inv.getSize() - 1), item);
+                }
+                e.getPlayer().openInventory(inv);
+
+            }
+        }
     }
 
     @EventHandler
@@ -92,7 +129,6 @@ public class PlayerListener implements Listener {
     @EventHandler
     public void onEntityDamageByEnity(final EntityDamageByEntityEvent e) {
         if (e.getEntity().getType() == EntityType.PLAYER) {
-            final Player player = (Player) e.getEntity();
             if (e.getDamager().getType() == EntityType.PLAYER) {
                 if (!FilesHandler.getConfig().getBoolean("pvp"))
                     e.setCancelled(true);
@@ -100,13 +136,16 @@ public class PlayerListener implements Listener {
         } else {
             if (e.getDamager().getType() == EntityType.PLAYER) {
                 final Player damager = (Player) e.getDamager();
-
+                if (minusStr2.contains(damager))
+                    e.setDamage(e.getDamage() / 3);
+                else if (minusStr1.contains(damager))
+                    e.setDamage(e.getDamage() / 2);
             }
         }
     }
 
     @EventHandler
     public void onPlayerRespawn(final PlayerRespawnEvent e) {
-        e.getPlayer().setExp(0.99f);
+        e.getPlayer().setExp(0.9f);
     }
 }
