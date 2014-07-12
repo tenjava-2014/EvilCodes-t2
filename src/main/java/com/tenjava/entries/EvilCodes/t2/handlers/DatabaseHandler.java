@@ -21,19 +21,26 @@ public class DatabaseHandler {
         DatabaseHandler.connection = new MySQLCore(FilesHandler.getConfig().getString("database.host"), FilesHandler.getConfig().getString("database.database"),
                 FilesHandler.getConfig().getString("database.username"), FilesHandler.getConfig().getString("database.password"));
         DatabaseHandler.prefix = FilesHandler.getConfig().getString("database.prefix");
-        if (!connection.existsTable(prefix + "player"))
-            connection.execute("CREATE TABLE IF NOT EXISTS `" + prefix + "player` (" +
-                    "  `id` int(11) NOT NULL AUTO_INCREMENT," +
-                    "  `name` varchar(32) NOT NULL," +
-                    "  `uuid` varchar(64) NOT NULL," +
-                    "  `kills` int(11) NOT NULL," +
-                    "  `deaths` int(11) NOT NULL," +
-                    "  `energy` float NOT NULL," +
-                    "  `firstlogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                    "  `lastlogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                    "  `mobkills` int(11) NOT NULL," +
-                    "  PRIMARY KEY (`id`)" +
-                    ") ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
+        if (connection.checkConnection()) {
+            if (!connection.existsTable(prefix + "player")) {
+                LogHandler.log("Connected to database!");
+                LogHandler.log("Creating database table " + prefix + "player!");
+                connection.execute("CREATE TABLE IF NOT EXISTS `" + prefix + "player` (" +
+                        "  `id` int(11) NOT NULL AUTO_INCREMENT," +
+                        "  `name` varchar(32) NOT NULL," +
+                        "  `uuid` varchar(64) NOT NULL," +
+                        "  `kills` int(11) NOT NULL," +
+                        "  `deaths` int(11) NOT NULL," +
+                        "  `energy` float NOT NULL," +
+                        "  `firstlogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                        "  `lastlogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                        "  `mobkills` int(11) NOT NULL," +
+                        "  PRIMARY KEY (`id`)" +
+                        ") ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;");
+            }
+        } else {
+            LogHandler.err("Could not connect to database!");
+        }
     }
 
     public static boolean userExists(final Player player) {

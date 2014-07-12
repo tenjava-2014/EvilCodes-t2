@@ -21,7 +21,7 @@ public class FilesHandler {
         if (!configFile.exists())
             TenJava.instance.saveResource("config.yml", false);
         if (!messagesFile.exists()) {
-            TenJava.instance.saveResource("message.yml", false);
+            TenJava.instance.saveResource("messages.yml", false);
         }
 
         config = YamlConfiguration.loadConfiguration(configFile);

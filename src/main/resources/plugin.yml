@@ -1,4 +1,4 @@
-name: EvilCodes-t2
+name: MineEscape
 main: com.tenjava.entries.EvilCodes.t2.TenJava
 version: '${project.version}'
 author: EvilCodes
