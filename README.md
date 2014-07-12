@@ -43,4 +43,5 @@ For players:
 
 1. Join the server
 2. Escape the mobs and kill them
+3. Have fun
 
