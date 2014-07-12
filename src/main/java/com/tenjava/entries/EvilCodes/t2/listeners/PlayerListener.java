@@ -2,8 +2,11 @@ package com.tenjava.entries.EvilCodes.t2.listeners;
 
 import com.tenjava.entries.EvilCodes.t2.handlers.DatabaseHandler;
 import com.tenjava.entries.EvilCodes.t2.handlers.FilesHandler;
+import com.tenjava.entries.EvilCodes.t2.utils.ChestInventory;
+import com.tenjava.entries.EvilCodes.t2.utils.Enchantments;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -12,6 +15,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.*;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +28,8 @@ public class PlayerListener implements Listener {
 
     public static final ArrayList<Player> minusStr2 = new ArrayList<Player>();
     public static final ArrayList<Player> minusStr1 = new ArrayList<Player>();
+
+    public static final ArrayList<ChestInventory> chestinventories = new ArrayList<ChestInventory>();
 
     private static final Material[] findableItems = { Material.WOOD_SWORD, Material.STONE_SWORD, Material.IRON_SWORD, Material.GOLD_SWORD, //SWORDS
             Material.LEATHER_HELMET, Material.LEATHER_CHESTPLATE, Material.LEATHER_LEGGINGS, Material.LEATHER_BOOTS,  //LEATHER
@@ -46,12 +52,7 @@ public class PlayerListener implements Listener {
             player.setExp(0.99f);
         }
         player.setGameMode(GameMode.SURVIVAL);
-    }
-
-    @EventHandler
-    public void onPlayerQuit(final PlayerQuitEvent e) {
-        final Player player = e.getPlayer();
-        DatabaseHandler.getConnection().execute("UPDATE `" + DatabaseHandler.getPrefix() + "player` SET `energy` = '" + player.getExp() + "' WHERE `uuid` = '" + player.getUniqueId().toString() + "';");
+        DatabaseHandler.getConnection().execute("UPDATE `" + DatabaseHandler.getPrefix() + "player` SET `lastlogin` = 'CURRENT_TIMESTAMP' WHERE `uuid` = '" + e.getPlayer().getUniqueId().toString() + "';");
     }
 
     @EventHandler
@@ -83,33 +84,86 @@ public class PlayerListener implements Listener {
         DatabaseHandler.increaseValue("deaths", player);
     }
 
+    private static boolean containsChest(final int x, final int y, final int z) {
+        boolean contains = false;
+        for (final ChestInventory inv : chestinventories) {
+            if (inv.getX() == x && inv.getY() == y && inv.getZ() == z) {
+                contains = true;
+                break;
+            }
+        }
+        return contains;
+    }
+
+    private static Inventory getInventory(final int x, final int y, final int z) {
+        Inventory inventory = null;
+        for (final ChestInventory inv : chestinventories) {
+            if (inv.getX() == x && inv.getY() == y && inv.getZ() == z) {
+                inventory = inv.getInventory();
+                break;
+            }
+        }
+        return inventory;
+    }
+
     @EventHandler
     public void onPlayerInteract(final PlayerInteractEvent e) {
         if (e.getClickedBlock() != null) {
             if (e.getClickedBlock().getType().equals(Material.CHEST)) {
-                e.setCancelled(true);
-                //Generate new chest
-                final Inventory inv = Bukkit.createInventory(null, 3 * 9, "RewardChest");
-                final List<ItemStack> inchestitems = new ArrayList<ItemStack>();
-                final Random r = new Random();
-                final int num = r.nextInt(10);
-                for (int i = 0; i < num; i++) {
-                    final Material itemmat = findableItems[r.nextInt(findableItems.length)];
-                    final ItemStack item = new ItemStack(itemmat, 1);
-                    inchestitems.add(item);
+                if (containsChest(e.getClickedBlock().getX(), e.getClickedBlock().getY(), e.getClickedBlock().getZ())) {
+                    e.setCancelled(true);
+                    e.getPlayer().openInventory(getInventory(e.getClickedBlock().getX(), e.getClickedBlock().getY(), e.getClickedBlock().getZ()));
+                } else {
+                    e.setCancelled(true);
+                    //Generate new chest
+                    final Inventory inv = Bukkit.createInventory(null, 3 * 9, "RewardChest");
+                    final List<ItemStack> inchestitems = new ArrayList<ItemStack>();
+                    final Random r = new Random();
+                    final int num = r.nextInt(10);
+                    for (int i = 0; i < num; i++) {
+                        final Material itemmat = findableItems[r.nextInt(findableItems.length)];
+                        final ItemStack item = new ItemStack(itemmat, 1);
+                        inchestitems.add(item);
+                    }
+                    for (final ItemStack item : inchestitems) {
+                        inv.setItem(r.nextInt(inv.getSize() - 1), item);
+                    }
+                    e.getPlayer().openInventory(inv);
+                    chestinventories.add(new ChestInventory(e.getPlayer(), e.getClickedBlock().getWorld().getName(), e.getClickedBlock().getX(), e.getClickedBlock().getY(), e.getClickedBlock().getZ(), inv));
                 }
-                for (final ItemStack item : inchestitems) {
-                    inv.setItem(r.nextInt(inv.getSize() - 1), item);
-                }
-                e.getPlayer().openInventory(inv);
+            } else if (e.getClickedBlock().getType().equals(Material.ENCHANTMENT_TABLE)) {
+                if (e.getPlayer().getLevel() >= 30) {
+                    Enchantments.enchant(e.getPlayer(), e.getPlayer().getItemInHand());
+                    final int newmobkills = DatabaseHandler.getValue("mobkills", e.getPlayer()) - 30;
+                    DatabaseHandler.getConnection().execute("UPDATE `" + DatabaseHandler.getPrefix() + "player` SET `mobkills` = '" + newmobkills + "' WHERE `uuid` = '" + e.getPlayer().getUniqueId().toString() + "';");
 
+                    e.getPlayer().setLevel(e.getPlayer().getLevel() - 30);
+
+                }
             }
         }
     }
 
     @EventHandler
+    public void onPlayerCloseInventory(final InventoryCloseEvent e) {
+        if (e.getInventory().getName().equalsIgnoreCase("rewardchest")) {
+            for (final ChestInventory inv : chestinventories) {
+                if (inv.getPlayer() == e.getPlayer()) {
+                    final Inventory inventory = e.getInventory();
+                    final Location location = inv.getLocation();
+                    chestinventories.remove(inv);
+                    chestinventories.add(new ChestInventory(null, location.getWorld().getName(), location.getBlockX(), location.getBlockY(), location.getBlockZ(), inventory));
+                }
+            }
+        }
+    }
+
+
+    @EventHandler
     public void onPlayerLevelUp(final PlayerLevelChangeEvent e) {
-        e.getPlayer().setLevel(DatabaseHandler.getValue("mobkills", e.getPlayer()));
+        if (e.getOldLevel() < e.getNewLevel()) {
+            e.getPlayer().setLevel(DatabaseHandler.getValue("mobkills", e.getPlayer()));
+        }
     }
 
     @EventHandler

@@ -14,7 +14,7 @@ public class DatabaseHandler {
     private static String prefix;
 
     /*
-    me_player: id, name, uuid, kills, deaths, energy, firstlogin, lastlogin, mobkills
+    me_player: id, name, uuid, kills, deaths, firstlogin, lastlogin, mobkills
      */
 
     public static void setup() {
@@ -31,7 +31,6 @@ public class DatabaseHandler {
                         "  `uuid` varchar(64) NOT NULL," +
                         "  `kills` int(11) NOT NULL," +
                         "  `deaths` int(11) NOT NULL," +
-                        "  `energy` float NOT NULL," +
                         "  `firstlogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                         "  `lastlogin` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP," +
                         "  `mobkills` int(11) NOT NULL," +
@@ -50,8 +49,8 @@ public class DatabaseHandler {
 
     public static void insert(final Player player) {
         final Date today = new Date();
-        final String query = "INSERT INTO `" + prefix + "player` (`id`, `name`, `uuid`, `kills`, `deaths`, `energy`, `firstlogin`, `lastlogin`, `mobkills`) VALUES (NULL, '" + player.getName() + "', '" + player.getUniqueId().toString()
-                + "', '0', '0', '1.0', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0');";
+        final String query = "INSERT INTO `" + prefix + "player` (`id`, `name`, `uuid`, `kills`, `deaths`, `firstlogin`, `lastlogin`, `mobkills`) VALUES (NULL, '" + player.getName() + "', '" + player.getUniqueId().toString()
+                + "', '0', '0', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, '0');";
         connection.execute(query);
     }
 
@@ -79,27 +78,6 @@ public class DatabaseHandler {
         final String query = "UPDATE `" + prefix + "player` SET `" + row + "` = '" + newvalue + "' WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
         connection.execute(query);
     }
-
-    /*
-    public static float getEnergy(final Player player) {
-        final String query = "SELECT * FROM `" + prefix + "player" + "` WHERE `uuid` = '" + player.getUniqueId().toString() + "';";
-        final ResultSet resultSet = connection.select(query);
-        float value = 0F;
-        if (resultSet != null) {
-            try {
-                while (resultSet.next()) {
-                    value = resultSet.getFloat("energy");
-                }
-            } catch (final SQLException ex) {
-                LogHandler.err("Error while trying to get energy from database for player " + player.getName());
-                LogHandler.stackErr(ex);
-            }
-        } else {
-            LogHandler.err("Cannot get energy for " + player.getName() + ": Resultset is null!");
-        }
-        return value;
-    }
-    */
 
     public static DBCore getConnection() {
         return DatabaseHandler.connection;

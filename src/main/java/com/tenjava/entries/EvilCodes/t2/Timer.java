@@ -39,7 +39,7 @@ public class Timer {
                             PlayerListener.minusStr1.remove(player);
                         if (PlayerListener.minusStr2.contains(player))
                             PlayerListener.minusStr2.remove(player);
-                    } else if (exp > 0.8f && exp < 0.99f) {
+                    } else if (exp > 0.8f) {
                         player.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 40, 2));
                         player.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 40, 1));
                         if (PlayerListener.minusStr1.contains(player))
