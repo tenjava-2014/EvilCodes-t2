@@ -91,4 +91,12 @@ public class DatabaseHandler {
         }
         return value;
     }
+
+    public static DBCore getConnection() {
+        return DatabaseHandler.connection;
+    }
+
+    public static String getPrefix() {
+        return DatabaseHandler.prefix;
+    }
 }
